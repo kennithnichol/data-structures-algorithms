@@ -2,7 +2,6 @@ class Queue {
     constructor() {
         this.stack1 = new Stack();
         this.stack2 = new Stack();
-        this.length = 0;
     }
     peek() {
         if (!this.stack2.isEmpty()) {
