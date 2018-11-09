@@ -32,6 +32,16 @@ class HashTable {
         }
         return undefined;
     }
+
+    keys() {
+        const keyArray = [];
+        for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i]) {
+                keysArray.push(this.data[i][0][0])
+            }
+        }
+        return keysArray;
+    }
 }
 
 // check
@@ -40,3 +50,4 @@ myHashTable.set('nova', 10000);
 myHashTable.get('nova');
 myHashTable.set('blackhole', 3);
 myHashTable.get('blackhole');
+myHashTable.keys()
