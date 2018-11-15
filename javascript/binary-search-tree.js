@@ -52,6 +52,80 @@ class BinarySearchTree {
         }
         return false;
     }
+    remove(value) {
+        if (!this.root) {
+            return false;
+        }
+        let currentNode = this.root;
+        let parentNode = null;
+        while(currentNode) {
+            if (value < currentNode.value) {
+                parentNode = currentNode;
+                currentNode = currentNode.left;
+            } else if (value > currentNode.value) {
+                parentNode = currentNode;
+                currentNode = currentNode.right;
+            } else if (value === currentNode.value) {
+                // match found
+
+                // no right child
+                if (currentNode.right === null) {
+                    if (parentNode === null) {
+                        this.root = currentNode.left;
+                    } else {
+                        // parent > current, make left child a child of parent.
+                        if (currentNode.value < parentNode.value) {
+                            parentNode.left = currentNode.left;
+                        }
+
+                        if (currentNode.value > parentNode.value) {
+                            parentNode.right = currentNode.left;
+                        }
+                    }
+                // right child whithout left child
+                } else if (currentNode.right.left === null) {
+                    if (parentNode === null) {
+                        this.root = currentNode.left;
+                    } else {
+                        currentNode.right.left = currentNode.left;
+
+                        // if parent > current, make right child of the left the parent
+                        if (currentNode.value < parentNode.value) {
+                            parentNode.left = currentNode.right;
+
+                        // if parent < current, make right child a right child of the parent
+                        } else if (currentNode.value > parentNode.value) {
+                            parentNode.right = currentNode.right;
+                        }
+                    }
+                // right child with left child
+                } else {
+                    let leftmost = currentNode.right.left;
+                    let leftmostParent = currentNode.right;
+                    while(leftmost.left !== null) {
+                        leftmostParent = leftmost;
+                        leftmost = leftmost.left;
+                    }
+
+                    // parent's left subtree is now leftmost's right subtree
+                    leftmostParent.left = leftmost.right;
+                    leftmost.left = currentNode.left;
+                    leftmost.right = currentNode.right;
+
+                    if (parentNode === null) {
+                        this.root = leftmost;
+                    } else {
+                        if (currentNode.value < parentNode.value) {
+                            parentNode.left = leftmost;
+                        } else if (currentNode.value > parentNode.value) {
+                            parentNode.right = leftmost;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+    }
 }
 
 // test the tree functionality
@@ -64,11 +138,16 @@ tree.insert(170)
 tree.insert(15)
 tree.insert(1)
 JSON.stringify(traverse(tree.root));
-tree.lookup(15);
-
 //      9
 //   4     20
 // 1  6  15   170
+tree.lookup(15);
+tree.remove(20);
+JSON.stringify(traverse(tree.root))
+
+//      9
+//   4     170
+// 1  6  15
 
 function traverse(node) {
     const tree = { value: node.value };
